@@ -8,34 +8,45 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   
+  html, body {
+    height: 100%;
+  }
+  
   body {
     font-family: 'Inter', sans-serif;
     background: #4D1D2B;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    padding: 15px;
+    padding: 12px;
   }
   
   .container {
     background: #6B2E42;
-    padding: 28px 32px;
+    padding: 24px;
     width: 100%;
+    height: auto;
+    max-width: 95vw;
+    max-height: 95vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .main-content {
     display: flex;
     align-items: center;
-    gap: 35px;
     justify-content: center;
-    flex-wrap: wrap;
+    gap: 28px;
+    width: 100%;
+    height: auto;
   }
   
   .clock {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     align-items: flex-start;
+    flex-shrink: 0;
   }
   
   .time-box {
@@ -48,7 +59,7 @@
   }
   
   .number {
-    font-size: 54px;
+    font-size: clamp(36px, 10vw, 56px);
     font-weight: 700;
     color: #F5E6E0;
     line-height: 1;
@@ -57,34 +68,50 @@
   }
   
   .label {
-    font-size: 9px;
+    font-size: clamp(7px, 2vw, 9px);
     color: #D4B5AB;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-top: 6px;
+    letter-spacing: 1.2px;
+    margin-top: 4px;
     font-weight: 600;
   }
   
   .separator {
-    font-size: 44px;
+    font-size: clamp(32px, 8vw, 44px);
     color: #D47A8C;
     font-weight: 700;
-    padding-top: 14px;
+    padding-top: clamp(8px, 2vw, 12px);
     line-height: 0.8;
+    flex-shrink: 0;
   }
   
   .divider {
+    flex-shrink: 0;
+  }
+  
+  .divider.vertical {
     width: 1px;
-    height: 110px;
+    height: clamp(80px, 20vh, 120px);
     background: #D47A8C;
     opacity: 0.3;
-    margin: 0 30px;
+    margin: 0 24px;
+  }
+  
+  .divider.horizontal {
+    width: 100%;
+    height: 1px;
+    background: #D47A8C;
+    opacity: 0.3;
+    margin: 16px 0;
+    display: none;
   }
   
   .info {
     display: flex;
-    gap: 25px;
+    gap: 20px;
     text-align: center;
+    justify-content: center;
+    flex-wrap: wrap;
   }
   
   .info-item {
@@ -92,62 +119,100 @@
     background: transparent;
     border: none;
     border-radius: 0;
+    flex: 0 1 auto;
+    min-width: fit-content;
   }
   
   .info-label {
-    font-size: 8px;
+    font-size: clamp(7px, 2vw, 9px);
     color: #D4B5AB;
     text-transform: uppercase;
-    letter-spacing: 1.2px;
-    margin-bottom: 6px;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
     font-weight: 600;
   }
   
   .info-value {
-    font-size: 13px;
+    font-size: clamp(11px, 2.5vw, 14px);
     color: #F5E6E0;
     font-weight: 600;
-    line-height: 1.4;
+    line-height: 1.3;
   }
   
   .temp-big {
-    font-size: 28px;
+    font-size: clamp(20px, 5vw, 28px);
     color: #F5E6E0;
     font-weight: 700;
   }
   
   .condition-text {
-    font-size: 12px;
+    font-size: clamp(10px, 2vw, 12px);
     color: #E8D4CA;
     font-weight: 400;
   }
 
-  @media (max-width: 600px) {
-    .container {
-      padding: 20px 20px;
-    }
-    
+  /* LAYOUT HORIZONTAL (padrão) */
+  @media (min-aspect-ratio: 1.2/1) {
     .main-content {
-      gap: 25px;
+      flex-direction: row;
     }
     
-    .divider {
-      width: 100%;
-      height: 1px;
-      margin: 0;
+    .divider.vertical {
+      display: block;
     }
     
-    .number {
-      font-size: 42px;
-    }
-    
-    .separator {
-      font-size: 34px;
+    .divider.horizontal {
+      display: none;
     }
     
     .info {
+      flex-direction: row;
+      gap: 28px;
+    }
+  }
+
+  /* LAYOUT VERTICAL */
+  @media (max-aspect-ratio: 1.2/1) {
+    .container {
+      padding: 20px;
+    }
+    
+    .main-content {
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
+    }
+    
+    .divider.vertical {
+      display: none;
+    }
+    
+    .divider.horizontal {
+      display: block;
+    }
+    
+    .info {
+      flex-direction: row;
+      gap: 16px;
+      justify-content: center;
+    }
+  }
+
+  /* TELAS MUITO PEQUENAS */
+  @media (max-width: 400px) {
+    .container {
+      padding: 16px;
+    }
+    
+    .number {
+      font-size: 32px;
+    }
+    
+    .separator {
+      font-size: 28px;
+    }
+    
+    .info-item {
+      flex: 0 1 auto;
     }
   }
 </style>
@@ -168,7 +233,8 @@
       </div>
     </div>
     
-    <div class="divider"></div>
+    <div class="divider vertical"></div>
+    <div class="divider horizontal"></div>
     
     <div class="info">
       <div class="info-item">
