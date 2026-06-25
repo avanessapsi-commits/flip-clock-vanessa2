@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flip Clock - Cotia</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #E8C4D0 0%, #F5F1E8 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  .container {
+    background: linear-gradient(135deg, #FFFFFF 0%, #FAF8F6 100%);
+    border: 2px solid #D47A8C;
+    border-radius: 28px;
+    padding: 45px 35px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 12px 32px rgba(92, 38, 54, 0.15);
+  }
+  
+  .clock {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 35px;
+  }
+  
+  .time-box {
+    border: 2px solid #D47A8C;
+    border-radius: 18px;
+    padding: 24px 20px;
+    min-width: 110px;
+    text-align: center;
+    background: linear-gradient(135deg, #FFFFFF 0%, #FFF5F7 100%);
+    box-shadow: 0 4px 12px rgba(212, 122, 140, 0.12);
+  }
+  
+  .number {
+    font-size: 68px;
+    font-weight: 700;
+    color: #5C2636;
+    line-height: 1;
+    letter-spacing: -2px;
+  }
+  
+  .label {
+    font-size: 11px;
+    color: #704050;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 10px;
+    font-weight: 600;
+  }
+  
+  .separator {
+    font-size: 52px;
+    color: #D47A8C;
+    font-weight: 700;
+    padding-top: 22px;
+    line-height: 0.8;
+  }
+  
+  .divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #D47A8C, transparent);
+    margin: 30px 0;
+  }
+  
+  .info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .info-item {
+    padding: 18px;
+    background: linear-gradient(135deg, #FFF9FB 0%, #FFFBFC 100%);
+    border: 1.5px solid #E8C4D0;
+    border-radius: 14px;
+  }
+  
+  .info-label {
+    font-size: 10px;
+    color: #704050;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  
+  .info-value {
+    font-size: 16px;
+    color: #5C2636;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  
+  .temp-big {
+    font-size: 36px;
+    color: #5C2636;
+    font-weight: 700;
+  }
+  
+  .condition {
+    grid-column: 1 / -1;
+  }
+  
+  .condition-text {
+    font-size: 14px;
+    color: #704050;
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="clock">
+    <div class="time-box">
+      <div class="number" id="horas">00</div>
+      <div class="label" id="periodo">AM</div>
+    </div>
+    <div class="separator">:</div>
+    <div class="time-box">
+      <div class="number" id="minutos">00</div>
+      <div class="label">min</div>
+    </div>
+  </div>
+  
+  <div class="divider"></div>
+  
+  <div class="info">
+    <div class="info-item">
+      <div class="info-label">Data</div>
+      <div class="info-value" id="data">--</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Temperatura</div>
+      <div class="temp-big" id="temperatura">--°</div>
+    </div>
+    <div class="info-item condition">
+      <div class="info-label">Condição</div>
+      <div class="condition-text" id="condicao">Carregando...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function atualizaHora() {
+  const agora = new Date();
+  const horas = String(agora.getHours()).padStart(2, '0');
+  const minutos = String(agora.getMinutes()).padStart(2, '0');
+  const periodo = agora.getHours() >= 12 ? 'PM' : 'AM';
+  
+  document.getElementById('horas').textContent = horas;
+  document.getElementById('minutos').textContent = minutos;
+  document.getElementById('periodo').textContent = periodo;
+}
+
+function atualizaData() {
+  const agora = new Date();
+  const meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  const dias = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
+  
+  const dia = dias[agora.getDay()];
+  const num = agora.getDate();
+  const mes = meses[agora.getMonth()];
+  
+  document.getElementById('data').textContent = `${dia}, ${num} ${mes}`;
+}
+
+function buscaClima() {
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=-23.5606&longitude=-46.7647&current=temperature_2m,weather_code&temperature_unit=celsius')
+    .then(r => r.json())
+    .then(dados => {
+      if (dados.current) {
+        const temp = Math.round(dados.current.temperature_2m);
+        const codigo = dados.current.weather_code;
+        
+        document.getElementById('temperatura').textContent = temp + '°';
+        
+        const condicoes = {
+          0: 'Ensolarado',
+          1: 'Pouco nublado',
+          2: 'Nublado',
+          3: 'Muito nublado',
+          45: 'Nebuloso',
+          48: 'Nebuloso',
+          51: 'Garoa',
+          61: 'Chuva leve',
+          63: 'Chuva',
+          65: 'Chuva forte',
+          71: 'Neve',
+          80: 'Pancadas de chuva',
+          95: 'Trovoada'
+        };
+        
+        document.getElementById('condicao').textContent = condicoes[codigo] || 'Consultando';
+      }
+    })
+    .catch(e => {
+      document.getElementById('condicao').textContent = 'Indisponível';
+    });
+}
+
+atualizaHora();
+atualizaData();
+buscaClima();
+
+setInterval(atualizaHora, 1000);
+setInterval(atualizaData, 60000);
+setInterval(buscaClima, 600000);
+</script>
+
+</body>
+</html>
