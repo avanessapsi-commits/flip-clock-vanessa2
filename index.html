@@ -15,26 +15,26 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 20px;
+    padding: 10px;
   }
   
   .container {
     background: #6B2E42;
-    padding: 50px 60px;
-    max-width: 1000px;
+    padding: 24px 30px;
+    max-width: 700px;
     width: 100%;
   }
   
   .main-content {
     display: flex;
     align-items: center;
-    gap: 60px;
+    gap: 30px;
     justify-content: center;
   }
   
   .clock {
     display: flex;
-    gap: 12px;
+    gap: 6px;
     align-items: flex-start;
   }
   
@@ -48,43 +48,43 @@
   }
   
   .number {
-    font-size: 76px;
+    font-size: 48px;
     font-weight: 700;
     color: #F5E6E0;
     line-height: 1;
-    letter-spacing: -3px;
+    letter-spacing: -2px;
     font-variant-numeric: tabular-nums;
   }
   
   .label {
-    font-size: 10px;
+    font-size: 8px;
     color: #D4B5AB;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-top: 8px;
+    letter-spacing: 1.5px;
+    margin-top: 4px;
     font-weight: 600;
   }
   
   .separator {
-    font-size: 60px;
+    font-size: 40px;
     color: #F5E6E0;
     font-weight: 700;
-    padding-top: 12px;
+    padding-top: 6px;
     line-height: 0.8;
     opacity: 0.7;
   }
   
   .divider {
     width: 1px;
-    height: 150px;
+    height: 100px;
     background: #F5E6E0;
     opacity: 0.2;
-    margin: 0 50px;
+    margin: 0 25px;
   }
   
   .info {
     display: flex;
-    gap: 50px;
+    gap: 25px;
     text-align: center;
   }
   
@@ -96,37 +96,37 @@
   }
   
   .info-label {
-    font-size: 10px;
+    font-size: 8px;
     color: #D4B5AB;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 12px;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
     font-weight: 600;
   }
   
   .info-value {
-    font-size: 17px;
+    font-size: 13px;
     color: #F5E6E0;
     font-weight: 500;
-    line-height: 1.5;
+    line-height: 1.4;
   }
   
   .temp-big {
-    font-size: 40px;
+    font-size: 26px;
     color: #F5E6E0;
     font-weight: 700;
   }
   
   .condition-text {
-    font-size: 15px;
+    font-size: 12px;
     color: #E8D4CA;
     font-weight: 400;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 600px) {
     .main-content {
       flex-direction: column;
-      gap: 40px;
+      gap: 20px;
     }
     
     .divider {
@@ -137,11 +137,11 @@
     
     .info {
       flex-direction: column;
-      gap: 35px;
+      gap: 20px;
     }
     
     .container {
-      padding: 40px 30px;
+      padding: 20px 20px;
     }
   }
 </style>
@@ -170,7 +170,7 @@
         <div class="info-value" id="data">--</div>
       </div>
       <div class="info-item">
-        <div class="info-label">Temperatura</div>
+        <div class="info-label">Temp</div>
         <div class="temp-big" id="temperatura">--°</div>
       </div>
       <div class="info-item">
@@ -195,14 +195,14 @@ function atualizaHora() {
 
 function atualizaData() {
   const agora = new Date();
-  const meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
-  const dias = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
+  const meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  const dias = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
   
   const dia = dias[agora.getDay()];
   const num = agora.getDate();
   const mes = meses[agora.getMonth()];
   
-  document.getElementById('data').textContent = `${dia}\n${num} de ${mes}`;
+  document.getElementById('data').textContent = `${dia}, ${num} ${mes}`;
 }
 
 function buscaClima() {
@@ -217,14 +217,14 @@ function buscaClima() {
         
         const condicoes = {
           0: 'Ensolarado',
-          1: 'Parcialmente nublado',
+          1: 'P. nublado',
           2: 'Nublado',
           3: 'Encoberto',
           45: 'Nebuloso',
           48: 'Nebuloso',
           51: 'Chuvisco',
           61: 'Chuva',
-          63: 'Chuva moderada',
+          63: 'Chuva mod',
           65: 'Chuva forte',
           71: 'Neve',
           80: 'Pancadas',
